@@ -11,7 +11,7 @@ struct sdshdr {
 >buf在字符串末尾**透明的**保存了空字符串'\0'，且这额外的1字节空间不计算在SDS的len中。
 
 ## SDS相比C字符串更适用Redis的原因
-1. SDS获取字符串长度复杂度为$$O(1)$$，C字符串为$$O(n)$$。
+1. SDS获取字符串长度复杂度为$O(1)$，C字符串为$O(n)$。
 2. 增长或缩短一个C字符串均需要内存重分配（涉及复杂的算法，并可能需要执行系统调用，比较耗时），SDS通过free解除字符串长度和底层数组长度关联，并实现空间预分配和惰性空间释放两种优化策略：
     - 空间预分配
         - free够用，直接使用
@@ -46,7 +46,7 @@ typedef struct list {
 
 ## Redis链表特性
 1. 双端、无环、带表头指针和表尾指针（双向链表）
-2. 链表长度计数器，获得节点数量复杂度$$O(1)$$
+2. 链表长度计数器，获得节点数量复杂度$O(1)$
 3. 多态：链表节点使用void*指针来保存节点值，并可以通过list结构的dup、free、match三个属性为节点设置类型特定函数，所以链表可以用于保存各种不同类型的值
 
 ---
@@ -102,7 +102,7 @@ index = hash & dict->ht[x].sizemask;  //&运算得索引值，根据情况选择
 ```
 
 ### 解决键冲突
-由于dictEntry节点组成的链表没有指向链表表尾的指针，因此新节点添加至表头(复杂度$$O(1)$$)。
+由于dictEntry节点组成的链表没有指向链表表尾的指针，因此新节点添加至表头(复杂度$O(1)$)。
 
 ### rehash
 为了使哈希表的负载因子维持在合理范围，当哈希表键值对数量过多或过少时，可以通过rehash对哈希表进行扩展或收缩。
@@ -116,7 +116,7 @@ Redis会在以下情况对哈希表执行扩展操作：
 当```load_factor < 0.1```时Redis执行收缩操作。
 
 以下是哈希表rehash的详细步骤：
-1. 为ht[1]分配空间。如果是扩展操作，ht[1]空间大小为第一个大于等于```ht[0].used*2```的$$2^n$$；如果是收缩操作，ht[1]空间大小为第一个大于等于```ht[0].used```的$$2^n$$；
+1. 为ht[1]分配空间。如果是扩展操作，ht[1]空间大小为第一个大于等于```ht[0].used*2```的$2^n$；如果是收缩操作，ht[1]空间大小为第一个大于等于```ht[0].used```的$2^n$；
 2. 将ht[0]中的所有键值对rehash到ht[1]上；
 3. 释放ht[0]，将ht[1]设置为ht[0]，并在ht[1]创建一个空白哈希表。
 
@@ -134,7 +134,60 @@ Redis会在以下情况对哈希表执行扩展操作：
 
 # 跳跃表
 ## 数据结构
+跳跃表支持平均$O(log_2{n})$、最坏$O(n)$复杂度的节点查找，还可以通过顺序性操作批量处理节点。
 ```
+redis.h/zskiplist  //跳表
+typedef struct zskiplist {
+    struct skiplistNode *header, *tail;  //表头节点和表尾节点
+    unsigned long length;  //表中节点数量
+    int level;  //表中层数最大的节点层数
+} zskiplist;
 
+redis.h/zskiplistNode  //跳表节点
+typedef struct zskiplistNode {
+    struct zskiplistNode *backward;  //后退指针，从表尾向表头遍历使用
+    double score;  //分值，跳跃表所有节点按照score从小到大排序
+    robj *obj;  //成员对象
+    struct zskiplistLevel {
+        struct zskiplistNode *forward;  //前进指针
+        unsigned int span;  //跨度
+    } level[];  //层
+} zskiplistNode;
 ```
 ![redis跳跃表.jpg](pic/Redis跳跃表.jpg)
+
+---
+
+# 整数集合
+## 数据结构
+```
+intset.h/intset  //整数集合
+typedef struct intset {
+    unit32_t encoding;  //编码方式
+    unit32_t length;  //集合包含元素数量
+    int8_t contents[];  //保存元素的数组
+}
+```
+>contents真正类型取决于encoding。
+>|encoding|contents|
+>|-|-|
+>|INTSET_ENC_INT16|int16_t|
+>|INTSET_ENC_INT32|int32_t|
+>|INTSET_ENC_INT64|int64_t|
+
+## 升级
+当添加一个新元素到整数集合中时，且新元素的类型逼整数集合现在所有元素的类型都长时，会触发升级操作。
+>如果添加的元素为int32_t类型，但是int16_t即可存储，则不触发升级。
+1. 根据新元素的类型，扩展整数集合底层数组空间大小，并为新元素分配空间；
+2. 将底层数组所有现有元素都转换为新的类型，且保持有序性放在正确位置；
+3. 新元素添加至底层数组（新数组小于所有元素或大于所有元素，底层数组索引0或length-1）；
+4. 修改encoding和length属性。
+> 整数集合不支持降级。
+
+升级的好处如下：
+- 提升灵活性：添加元素不需要考虑类型问题
+- 节约内存：尽量使用位数小的类型
+
+---
+
+# 压缩列表
