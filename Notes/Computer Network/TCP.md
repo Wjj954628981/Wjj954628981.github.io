@@ -26,6 +26,11 @@ B-->|dupAck count==3|C
 > - 每当出现**超时**，状态机均转移至慢启动阶段，且ssthresh=cwnd/2。
 > - 每当出现**三个冗余ACK**（拥塞），状态机均转移至快速恢复阶段，且*ssthresh=cwnd/2，cwnd=ssthresh+3MSS*。
 
+### 长短连接及心跳
+TCP的连接是需要通过发送数据来保持，正常进程结束或者SOCKET被close会发送FIN报文从而断开连接，但如果一端被拔掉网线或切断电路那么另一端则无法断开连接。
+
+尽管TCP通过keepalive来实现心跳维持长连接，很多应用仍实现了更高层的心跳来实现更加复杂特殊的需求。
+
 ### 三次握手与四次挥手
 ```mermaid
 sequenceDiagram
