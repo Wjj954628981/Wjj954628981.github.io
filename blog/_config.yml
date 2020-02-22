@@ -117,6 +117,10 @@ mermaid:
 menu:
   主页: /
   算法: /tags/算法/
+  数据结构: /tags/数据结构/
+  # 操作系统: /tags/操作系统/
+  计算机网络: /tags/计算机网络/
+  数据库: /tags/数据库/
 
 subnav:
   github: 'https://github.com/Wjj954628981'
