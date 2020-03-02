@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://wjj954628981.github.io/2020/02/25/Linux%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E7%9B%B8%E4%BC%BC%E6%AE%B5%E5%90%88%E5%B9%B6.jpg">
 <meta property="og:image" content="https://wjj954628981.github.io/2020/02/25/Linux%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/ELF%E4%B8%8E%E8%BF%9B%E7%A8%8B%E8%99%9A%E6%8B%9F%E7%A9%BA%E9%97%B4%E6%98%A0%E5%B0%84.jpg">
 <meta property="article:published_time" content="2020-02-24T18:29:46.000Z">
-<meta property="article:modified_time" content="2020-02-25T17:05:13.698Z">
+<meta property="article:modified_time" content="2020-03-02T18:52:13.341Z">
 <meta property="article:author" content="Wordsworth">
 <meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary">
@@ -187,7 +187,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-keyboard-o"></i>
               <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">2.5k字</span>
+              <span class="post-count">2.6k字</span>
             </span>
           </span>
           <span class="post-time">
@@ -195,7 +195,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-hourglass-half"></i>
               <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">8分</span>
+              <span class="post-count">9分</span>
             </span>
           </span>
         </div>
@@ -275,6 +275,9 @@
 <p>页表中的页表项占32-bit。由于只需要其中20位来存放页面的物理基地址，剩下的12位可用于存放诸如页面是否存在（不存在会产生<strong>缺页中断</strong>）等属性信息。</p>
 <blockquote>
 <p>上述的转换均在<strong>MMU（Memory Management Unit）</strong>中进行处理。</p>
+</blockquote>
+<blockquote>
+<p>页表存储于<strong>进程控制块（PCB）</strong>中。PCB是操作系统中最重要的记录性数据结构，<strong>每一个进程均有一个PCB</strong>，在创建进程时建立PCB，并伴随进程运行的全过程，直到进程撤消而撤消。PCB中除了页表外还存储了：进程状态，程序计数器，CPU寄存器，CPU调度信息，内存管理信息，记账信息，I/O状态信息，等。</p>
 </blockquote>
 <h4 id="页表项过多"><a href="#页表项过多" class="headerlink" title="页表项过多"></a>页表项过多</h4><p>默认以4k作为页表大小，如果是32位机器，则有$2^32/2^12=2^20$条页表，如果是64位则页表项更多，要如何解决呢？</p>
 <p>其实页目录就是解决的办法，即通过增加多级索引的方式来解决索引项过多。</p>
