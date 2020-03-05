@@ -6,15 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wjj954628981.github.io">
-  <title>Wordsworth&#39;s blog</title>
+  <title>面试题-进程间通信 | Wordsworth&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Wordsworth&#39;s blog">
-<meta property="og:url" content="https://wjj954628981.github.io/page/2/index.html">
+  <meta name="description" content="在上一篇文章面试题-进程、线程、协程中，我们介绍了进程、线程和协程的概念。对于线程和协程而言，他们共享进程的内存空间，可以很简单进行通信；而对于进程而言，由于其独立的内存空间，无法进行直接通信，因此进程间通信（InterProcess Communication，IPC）尤为重要。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题-进程间通信">
+<meta property="og:url" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/index.html">
 <meta property="og:site_name" content="Wordsworth&#39;s blog">
+<meta property="og:description" content="在上一篇文章面试题-进程、线程、协程中，我们介绍了进程、线程和协程的概念。对于线程和协程而言，他们共享进程的内存空间，可以很简单进行通信；而对于进程而言，由于其独立的内存空间，无法进行直接通信，因此进程间通信（InterProcess Communication，IPC）尤为重要。">
 <meta property="og:locale" content="cn">
+<meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F.jpg">
+<meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/fork%E4%B9%8B%E5%90%8E%E7%9A%84%E5%8D%8A%E5%8F%8C%E5%B7%A5%E7%AE%A1%E9%81%93.jpg">
+<meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E5%8D%8F%E5%90%8C%E8%BF%9B%E7%A8%8B.jpg">
+<meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E7%AE%A1%E9%81%93%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92.jpg">
+<meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E5%AE%A2%E6%88%B7-%E6%9C%8D%E5%8A%A1%E5%99%A8.jpg">
+<meta property="article:published_time" content="2020-03-05T19:19:16.000Z">
+<meta property="article:modified_time" content="2020-03-05T19:50:54.490Z">
 <meta property="article:author" content="Wordsworth">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F.jpg">
   
   
   <link rel="stylesheet" type="text/css" href="/./main.0cf68a.css">
@@ -162,16 +174,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Golang-scheduler" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-面试题-进程间通信" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/31/Golang-scheduler/">Golang调度模型</a>
+    <h1 class="article-title" itemprop="name">
+      面试题-进程间通信
     </h1>
   
 
@@ -180,193 +190,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-keyboard-o"></i>
               <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">295字</span>
-            </span>
-          </span>
-          <span class="post-time">
-            &nbsp; | &nbsp;
-            <span class="post-meta-item-icon">
-              <i class="fa fa-hourglass-half"></i>
-              <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">1分</span>
-            </span>
-          </span>
-        </div>
-        
-        
-
-<a href="/2019/07/31/Golang-scheduler/" class="archive-article-date">
-  	<time datetime="2019-07-31T10:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-31</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>协程可谓是Golang的精髓，了解熟悉Golang协程的调度在Golang学习过程中非常重要。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Golang</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/07/31/Golang-scheduler/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-BitMap &amp; Bloom-Filter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/20/BitMap%20&%20Bloom-Filter/">BitMap &amp; Bloom-Filter</a>
-    </h1>
-  
-
-        <div style="margin-top:10px;">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-keyboard-o"></i>
-              <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">823字</span>
-            </span>
-          </span>
-          <span class="post-time">
-            &nbsp; | &nbsp;
-            <span class="post-meta-item-icon">
-              <i class="fa fa-hourglass-half"></i>
-              <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">3分</span>
-            </span>
-          </span>
-        </div>
-        
-        
-
-<a href="/2019/05/20/BitMap%20&%20Bloom-Filter/" class="archive-article-date">
-  	<time datetime="2019-05-20T10:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>所谓BitMap就是用一个bit位来标记某个元素所对应的value（0或1），而key即是该元素（一般为Hash）。由于BitMap使用了bit位来存储数据，因此可以大大节省存储空间。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/20/BitMap%20&%20Bloom-Filter/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Redis单机数据库的实现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/19/Redis%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%9E%E7%8E%B0/">Redis单机数据库的实现</a>
-    </h1>
-  
-
-        <div style="margin-top:10px;">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-keyboard-o"></i>
-              <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">1.5k字</span>
+              <span class="post-count">1.6k字</span>
             </span>
           </span>
           <span class="post-time">
@@ -380,17 +204,109 @@
         </div>
         
         
+	<!-- 不蒜子统计 -->
+	<span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+		  <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+	</span>
 
-<a href="/2019/05/19/Redis%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2019-05-19T10:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-19</time>
+
+<a href="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="archive-article-date">
+  	<time datetime="2020-03-05T19:19:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>了解Redis单机数据库的具体实现，才能真正掌握Redis的优势所在。</p>
-        
+        <p>在上一篇文章<a href="https://wjj954628981.github.io/2020/03/02/面试题-进程、线程、协程/">面试题-进程、线程、协程</a>中，我们介绍了进程、线程和协程的概念。对于线程和协程而言，他们共享进程的内存空间，可以很简单进行通信；而对于进程而言，由于其独立的内存空间，无法进行直接通信，因此<strong>进程间通信（InterProcess Communication，IPC）</strong>尤为重要。</p>
+<a id="more"></a>
+
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>进程间要实现通信，必定需要在一个公共区域共享一块公共资源，通过进程均可读写该资源实现进程间通信。<br>按照以上逻辑，可以将进程间通信方式分为以下三类：</p>
+<ol>
+<li>共享文件系统，需要穿过内核空间</li>
+<li>共享内核信息（如pipe、FIFO、XSI）</li>
+<li>共享内存区</li>
+</ol>
+<img src="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F.jpg" class="">
+
+<p>接下来我们对后两种的具体实现方式进行详细描述分析。</p>
+<h1 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h1><h2 id="概述及局限性"><a href="#概述及局限性" class="headerlink" title="概述及局限性"></a>概述及局限性</h2><p>管道是UNIX系统IPC的最古老形式，所有UNIX系统都提供此种通信机制。管道可以类比为一根水管，数据从一端流入从另一段流出。<br>管道有以下两种局限性：</p>
+<ul>
+<li>半双工（<strong>数据只能在一个方向上流动</strong>）</li>
+<li>管道只能在具有公共祖先的两个进程之间使用<blockquote>
+<p>尽管管道有这两种局限性，但是shell执行均通过管道实现，因此仍是最常用的IPC形式。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="管道的创建"><a href="#管道的创建" class="headerlink" title="管道的创建"></a>管道的创建</h2><p>管道通过调用pipe函数创建：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">&#x2F;&#x2F;成功返回0，错误返回-1</span><br><span class="line">int pipe(int fd[2]);</span><br></pre></td></tr></table></figure>
+<p>fd返回两个文件描述符：fd[0]为读而打开，fd[1]为写而打开。如下图所示：</p>
+<img src="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/fork%E4%B9%8B%E5%90%8E%E7%9A%84%E5%8D%8A%E5%8F%8C%E5%B7%A5%E7%AE%A1%E9%81%93.jpg" class="">
+
+<h2 id="管道的使用"><a href="#管道的使用" class="headerlink" title="管道的使用"></a>管道的使用</h2><p>最常见的操作是创建一个连接到另一个进程的管道，然后读其输出或向其输入段发送数据，为此标准I/O库提供了两个函数popen和pclose。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">&#x2F;&#x2F;成功返回文件指针，错误返回NULL</span><br><span class="line">&#x2F;&#x2F;如果type是&quot;r&quot;，则返回的文件指针是可读的；如果type是&quot;w&quot;，则返回的文件指针是可写的</span><br><span class="line">FILE *popen(const char *cmdstring, const char *type);</span><br><span class="line">&#x2F;&#x2F;成功返回cmdstring的终止状态，错误返回-1</span><br><span class="line">int pclose(FILE *fp);</span><br></pre></td></tr></table></figure>
+
+<h1 id="协同进程"><a href="#协同进程" class="headerlink" title="协同进程"></a>协同进程</h1><p>UNIX系统<strong>过滤程序</strong>从标准输入读取数据，向标准输出写数据。几个过滤程序通常在shell管道中线性连接。当一个过滤程序既产生某个过滤程序的输入，又读取改过滤程序的输出，它就变成了协同进程。图示如下：</p>
+<img src="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E5%8D%8F%E5%90%8C%E8%BF%9B%E7%A8%8B.jpg" class="">
+<blockquote>
+<p>协同进程可以说是管道的一个特殊应用。</p>
+</blockquote>
+<h1 id="FIFO（命名管道）"><a href="#FIFO（命名管道）" class="headerlink" title="FIFO（命名管道）"></a>FIFO（命名管道）</h1><p>管道有局限性2:只能在具有公共祖先的两个进程之间使用。这个局限性对于进程间通信很不友好，但是通过FIFO，不相关的进程也能交换数据。</p>
+<blockquote>
+<p><strong>FIFO是一种文件类型</strong></p>
+</blockquote>
+<h2 id="FIFO的创建"><a href="#FIFO的创建" class="headerlink" title="FIFO的创建"></a>FIFO的创建</h2><p>由于FIFO是一种文件类型，创建FIFO类似于创建文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys&#x2F;stat.h&gt;</span><br><span class="line">&#x2F;&#x2F;以下两个函数，成功返回0，错误返回1</span><br><span class="line">int mkfifo(const char *path, mode_t mode);</span><br><span class="line">int mkfifoat(int fd, const char *path, mode_t mode);</span><br></pre></td></tr></table></figure>
+
+<h2 id="FIFO的使用"><a href="#FIFO的使用" class="headerlink" title="FIFO的使用"></a>FIFO的使用</h2><p>FIFO可以通过任何文件I/O函数打开，比如open。<br>当open一个FIFO时，非阻塞标志（O_NONBLOCK）会产生下列影响：</p>
+<ul>
+<li>一般情况下（没有指定O_NONBLOCK），只读（只写）open需要阻塞到某个其他进程为了写（读）而打开这个FIFO为止；</li>
+<li>如果指定了O_NONBLOCK，只读open立即返回。但是如果没有任何进程为读而打开改FIFO，那么只写open将返回-1，并将errno设置为ENXIO。<br>当write一个FIFO：</li>
+<li>若write一个没有任何进程为读而打开的FIFO，则产生信号SIGPIPE；</li>
+<li>FIFO的最后一个写进程关闭该FIFO，则将为该FIFO的读进程产生一个文件结束标志。</li>
+</ul>
+<h2 id="FIFO的用途"><a href="#FIFO的用途" class="headerlink" title="FIFO的用途"></a>FIFO的用途</h2><ul>
+<li><p>shell命令使用FIFO将数据从一条管道传递到另一条时，<strong>无需创建中间临时文件</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;tee命令用于将数据重定向到文件，另一方面还可以提供一份重定向数据的副本作为后续命令的stdin。</span><br><span class="line">&#x2F;&#x2F;简单的说就是把数据重定向到给定文件和屏幕上。</span><br><span class="line">mkfifo fifo1</span><br><span class="line">prog3 &lt; fifo1 &amp;</span><br><span class="line">prog1 &lt; infile | tee fifo1 | prog2</span><br></pre></td></tr></table></figure>
+<p>以上shell命令的数据流如下图所示：</p>
+<img src="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E7%AE%A1%E9%81%93%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92.jpg" class="">
+</li>
+<li><p><strong>客户-服务器</strong>进程应用程序中，FIFO用作汇聚点，在客户进程和服务器进程之间传递数据</p>
+<img src="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E5%AE%A2%E6%88%B7-%E6%9C%8D%E5%8A%A1%E5%99%A8.jpg" class="">
+
+</li>
+</ul>
+<blockquote>
+<p>综上，<strong>FIFO起到了临时文件但是不需要占用磁盘空间的作用</strong></p>
+</blockquote>
+<h1 id="XSI-IPC"><a href="#XSI-IPC" class="headerlink" title="XSI IPC"></a>XSI IPC</h1><p>有三种称作XSI IPC的IPC：<strong>消息队列</strong>、<strong>信号量</strong>以及<strong>共享存储器</strong>。他们之间有很多相似之处。</p>
+<h2 id="相似处"><a href="#相似处" class="headerlink" title="相似处"></a>相似处</h2><h3 id="标识符和键"><a href="#标识符和键" class="headerlink" title="标识符和键"></a>标识符和键</h3><ol>
+<li>每个内核中的IPC结构，都用一个非负整数的标识符加以引用。</li>
+<li>标识符是IPC对象的内部名，为了使多个合作进程能够在同一IPC对象上汇聚，需要提供一个<strong>外部命名方案</strong>：将每个IPC对象与一个键（数据类型为&lt;sys/types.h&gt;中的长整型key_t）相关联，将这个键作为该对象的外部名。</li>
+</ol>
+<blockquote>
+<ul>
+<li>与文件描述符不同，IPC描述符不是一个小的整数。当一个IPC结构被创建然后又被删除时，与这种结构相关的标识符连续加1直到达到最大正整型数后转回0循环。</li>
+<li>创建IPC结构时可以指定键<strong>IPC_PRIVATE</strong>。</li>
+<li>可以通过get函数（msgget、semget、shmget）来获得IPC结构。</li>
+</ul>
+</blockquote>
+<h3 id="权限结构"><a href="#权限结构" class="headerlink" title="权限结构"></a>权限结构</h3><p>XSI IPC为每一个IPC结构关联了一个<strong>ipc_perm</strong>结构，规定了权限及所有者。</p>
+<blockquote>
+<ul>
+<li>可以通过ctl函数（msgctl、semctl、shmctl）修改权限字段。</li>
+<li>IPC结构均没有执行权限。</li>
+</ul>
+</blockquote>
+<h3 id="结构限制"><a href="#结构限制" class="headerlink" title="结构限制"></a>结构限制</h3><p>三种形式的XSI IPC均有内置限制，大部分限制可以通过重新配置内核来修改。</p>
+<blockquote>
+<p>可以通过ipcs -l / ipcs -T命令查看限制。</p>
+</blockquote>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><h2 id="共享存储"><a href="#共享存储" class="headerlink" title="共享存储"></a>共享存储</h2><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li>《Unix环境高级编程-15章.进程间通信》</li>
+<li><a href="https://www.cnblogs.com/chenny7/p/3682822.html" target="_blank" rel="noopener">IPC 机制简介</a></li>
+</ol>
+
       
 
       
@@ -403,11 +319,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">操作系统</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Redis</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">面试</a>
         		</li>
       		
 		</ul>
@@ -416,16 +332,24 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/19/Redis%E5%8D%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%9E%E7%8E%B0/">展开全文 >></a>
-        </p>
-      
 
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2020/03/02/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B%E3%80%81%E5%8D%8F%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">面试题-进程、线程、协程</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -440,300 +364,32 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-RESTful API" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/16/RESTful%20API/">RESTful API</a>
-    </h1>
-  
-
-        <div style="margin-top:10px;">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-keyboard-o"></i>
-              <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">1.1k字</span>
-            </span>
-          </span>
-          <span class="post-time">
-            &nbsp; | &nbsp;
-            <span class="post-meta-item-icon">
-              <i class="fa fa-hourglass-half"></i>
-              <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">4分</span>
-            </span>
-          </span>
-        </div>
-        
-        
-
-<a href="/2019/05/16/RESTful%20API/" class="archive-article-date">
-  	<time datetime="2019-05-16T10:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><strong>RESTful API</strong>，全称为<strong>Representational State Transfer</strong>，即表现层状态转化。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">API</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/16/RESTful%20API/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#管道"><span class="toc-number">2.</span> <span class="toc-text">管道</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述及局限性"><span class="toc-number">2.1.</span> <span class="toc-text">概述及局限性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道的创建"><span class="toc-number">2.2.</span> <span class="toc-text">管道的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道的使用"><span class="toc-number">2.3.</span> <span class="toc-text">管道的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协同进程"><span class="toc-number">3.</span> <span class="toc-text">协同进程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FIFO（命名管道）"><span class="toc-number">4.</span> <span class="toc-text">FIFO（命名管道）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的创建"><span class="toc-number">4.1.</span> <span class="toc-text">FIFO的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的使用"><span class="toc-number">4.2.</span> <span class="toc-text">FIFO的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的用途"><span class="toc-number">4.3.</span> <span class="toc-text">FIFO的用途</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSI-IPC"><span class="toc-number">5.</span> <span class="toc-text">XSI IPC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#相似处"><span class="toc-number">5.1.</span> <span class="toc-text">相似处</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标识符和键"><span class="toc-number">5.1.1.</span> <span class="toc-text">标识符和键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#权限结构"><span class="toc-number">5.1.2.</span> <span class="toc-text">权限结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构限制"><span class="toc-number">5.1.3.</span> <span class="toc-text">结构限制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列"><span class="toc-number">5.2.</span> <span class="toc-text">消息队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号量"><span class="toc-number">5.3.</span> <span class="toc-text">信号量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#共享存储"><span class="toc-number">5.4.</span> <span class="toc-text">共享存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">5.4.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-Redis数据结构与对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/14/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%AF%B9%E8%B1%A1/">Redis数据结构与对象</a>
-    </h1>
-  
-
-        <div style="margin-top:10px;">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-keyboard-o"></i>
-              <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">3.4k字</span>
-            </span>
-          </span>
-          <span class="post-time">
-            &nbsp; | &nbsp;
-            <span class="post-meta-item-icon">
-              <i class="fa fa-hourglass-half"></i>
-              <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">13分</span>
-            </span>
-          </span>
-        </div>
-        
-        
-
-<a href="/2019/05/14/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%AF%B9%E8%B1%A1/" class="archive-article-date">
-  	<time datetime="2019-05-14T10:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>了解Redis数据结构与对象的具体实现，才能真正了解Redis可以适配哪些业务场景。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Redis</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/14/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%AF%B9%E8%B1%A1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-排序算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/13/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">排序算法</a>
-    </h1>
-  
-
-        <div style="margin-top:10px;">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-keyboard-o"></i>
-              <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">3.3k字</span>
-            </span>
-          </span>
-          <span class="post-time">
-            &nbsp; | &nbsp;
-            <span class="post-meta-item-icon">
-              <i class="fa fa-hourglass-half"></i>
-              <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">12分</span>
-            </span>
-          </span>
-        </div>
-        
-        
-
-<a href="/2019/05/13/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2019-05-13T10:50:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>排序算法可以说是最为基础，同时也是使用最为广泛的一类算法，身为程序员应该熟悉掌握各类排序算法。</p>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/13/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -761,8 +417,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

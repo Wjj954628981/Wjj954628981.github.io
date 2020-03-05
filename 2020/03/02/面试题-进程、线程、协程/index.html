@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://wjj954628981.github.io/2020/03/02/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B%E3%80%81%E5%8D%8F%E7%A8%8B/parallel.jpg">
 <meta property="og:image" content="https://wjj954628981.github.io/2020/03/02/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E3%80%81%E7%BA%BF%E7%A8%8B%E3%80%81%E5%8D%8F%E7%A8%8B/concurrency.jpg">
 <meta property="article:published_time" content="2020-03-02T15:53:16.000Z">
-<meta property="article:modified_time" content="2020-03-02T19:07:24.831Z">
+<meta property="article:modified_time" content="2020-03-05T19:18:49.762Z">
 <meta property="article:author" content="Wordsworth">
 <meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="面试">
@@ -187,7 +187,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-keyboard-o"></i>
               <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">1.3k字</span>
+              <span class="post-count">1.2k字</span>
             </span>
           </span>
           <span class="post-time">
@@ -260,10 +260,9 @@
 <p>线程是一个时间概念，线程可以真正的占有CPU时间片执行指令，每个进程至少有一个主线程来进行操作系统调度；</p>
 <p>线程调度由系统决定，想要调整顺序则需要<strong>锁</strong>来实现；协程则由用户决定（串形执行），且不需要陷入内核开销极小，但由于均在同一线程中自然无法利用多核CPU的优势。</p>
 </blockquote>
-<h1 id="进程间通信（InterProcess-Communication，IPC）"><a href="#进程间通信（InterProcess-Communication，IPC）" class="headerlink" title="进程间通信（InterProcess Communication，IPC）"></a>进程间通信（InterProcess Communication，IPC）</h1><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
 <li><a href="https://www.jianshu.com/p/f11724034d50" target="_blank" rel="noopener">进程，线程，协程与并行，并发</a></li>
 <li><a href="https://www.jianshu.com/p/cbf9588b2afb" target="_blank" rel="noopener">并发和并行的区别</a></li>
-<li>《Unix环境高级编程-15章.进程间通信》</li>
 </ol>
 
       
@@ -301,6 +300,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          面试题-进程间通信
+        
+      </div>
+    </a>
+  
   
     <a href="/2020/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98-%E9%94%81/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">面试题-锁</div>
@@ -330,7 +338,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概念及缘起"><span class="toc-number">1.</span> <span class="toc-text">概念及缘起</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#并行（parallel）"><span class="toc-number">1.0.1.</span> <span class="toc-text">并行（parallel）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并发（concurrency）"><span class="toc-number">1.0.2.</span> <span class="toc-text">并发（concurrency）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程"><span class="toc-number">1.0.3.</span> <span class="toc-text">进程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#进程的状态"><span class="toc-number">1.0.3.0.1.</span> <span class="toc-text">进程的状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程"><span class="toc-number">1.0.4.</span> <span class="toc-text">线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协程"><span class="toc-number">1.0.5.</span> <span class="toc-text">协程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程、线程、协程区别"><span class="toc-number">1.0.6.</span> <span class="toc-text">进程、线程、协程区别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#进程间通信（InterProcess-Communication，IPC）"><span class="toc-number">2.</span> <span class="toc-text">进程间通信（InterProcess Communication，IPC）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">2.0.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概念及缘起"><span class="toc-number">1.</span> <span class="toc-text">概念及缘起</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#并行（parallel）"><span class="toc-number">1.0.1.</span> <span class="toc-text">并行（parallel）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并发（concurrency）"><span class="toc-number">1.0.2.</span> <span class="toc-text">并发（concurrency）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程"><span class="toc-number">1.0.3.</span> <span class="toc-text">进程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#进程的状态"><span class="toc-number">1.0.3.0.1.</span> <span class="toc-text">进程的状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程"><span class="toc-number">1.0.4.</span> <span class="toc-text">线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协程"><span class="toc-number">1.0.5.</span> <span class="toc-text">协程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程、线程、协程区别"><span class="toc-number">1.0.6.</span> <span class="toc-text">进程、线程、协程区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">1.0.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
