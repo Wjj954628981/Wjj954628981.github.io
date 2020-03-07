@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E7%AE%A1%E9%81%93%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92.jpg">
 <meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E5%AE%A2%E6%88%B7-%E6%9C%8D%E5%8A%A1%E5%99%A8.jpg">
 <meta property="article:published_time" content="2020-03-05T19:19:16.000Z">
-<meta property="article:modified_time" content="2020-03-05T19:50:54.490Z">
+<meta property="article:modified_time" content="2020-03-07T19:04:24.444Z">
 <meta property="article:author" content="Wordsworth">
 <meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="面试">
@@ -190,7 +190,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-keyboard-o"></i>
               <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">1.6k字</span>
+              <span class="post-count">2.2k字</span>
             </span>
           </span>
           <span class="post-time">
@@ -198,7 +198,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-hourglass-half"></i>
               <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">5分</span>
+              <span class="post-count">8分</span>
             </span>
           </span>
         </div>
@@ -288,13 +288,13 @@
 <ul>
 <li>与文件描述符不同，IPC描述符不是一个小的整数。当一个IPC结构被创建然后又被删除时，与这种结构相关的标识符连续加1直到达到最大正整型数后转回0循环。</li>
 <li>创建IPC结构时可以指定键<strong>IPC_PRIVATE</strong>。</li>
-<li>可以通过get函数（msgget、semget、shmget）来获得IPC结构。</li>
+<li>可以通过<strong>get</strong>函数（msgget、semget、shmget）通过key来获得IPC结构。</li>
 </ul>
 </blockquote>
 <h3 id="权限结构"><a href="#权限结构" class="headerlink" title="权限结构"></a>权限结构</h3><p>XSI IPC为每一个IPC结构关联了一个<strong>ipc_perm</strong>结构，规定了权限及所有者。</p>
 <blockquote>
 <ul>
-<li>可以通过ctl函数（msgctl、semctl、shmctl）修改权限字段。</li>
+<li>可以通过<strong>ctl</strong>函数（msgctl、semctl、shmctl）修改权限字段。</li>
 <li>IPC结构均没有执行权限。</li>
 </ul>
 </blockquote>
@@ -302,7 +302,47 @@
 <blockquote>
 <p>可以通过ipcs -l / ipcs -T命令查看限制。</p>
 </blockquote>
-<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><h2 id="共享存储"><a href="#共享存储" class="headerlink" title="共享存储"></a>共享存储</h2><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>IPC结构没有引用计数，无法自动清理</li>
+<li>IPC结构在文件系统中没有名字，导致操作复杂繁琐</li>
+<li>IPC结构不使用文件描述符，因此无法使用I/O多路复用</li>
+</ul>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>消息队列是消息的链接表，存储在内核中，由消息队列标识符标识。</p>
+<blockquote>
+<p>每个消息队列均有一个msqid_ds结构与之关联，定义了当前队列的状态</p>
+</blockquote>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><ul>
+<li><p>打开/创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys&#x2F;msg.h&gt;</span><br><span class="line">&#x2F;&#x2F;成功返回消息队列ID，出错返回-1</span><br><span class="line">int msgget(key_t key, int flag);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>放入消息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys&#x2F;msg.h&gt;</span><br><span class="line">&#x2F;&#x2F;成功返回0，出错返回-1</span><br><span class="line">&#x2F;&#x2F;flag类似于文件I&#x2F;O的非阻塞I&#x2F;O标志</span><br><span class="line">int msgsnd(int msqid, const void *ptr, size_t nbytes, int flag);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;ptr指向的消息结构</span><br><span class="line">struct mymesg &#123;</span><br><span class="line">    long mtype;</span><br><span class="line">    char mtext[512];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>消息插入队列末尾</p>
+</blockquote>
+</li>
+<li><p>取出消息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys&#x2F;msg.h&gt;</span><br><span class="line">&#x2F;&#x2F;成功返回消息数据部分长度，出错返回-1</span><br><span class="line">ssize_t msgrcv(int msqid, void *ptr, size_t nbytes, int flag);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>信号量与已经介绍过的IPC机构（管道、FIFO、消息队列）不同，它是一个计数器，用于为多个进程提供对共享数据对象的访问。</p>
+<h3 id="信号量的工作方式"><a href="#信号量的工作方式" class="headerlink" title="信号量的工作方式"></a>信号量的工作方式</h3><p>为了获得共享资源，进程需要进行如下操作：</p>
+<ol>
+<li>获得控制该资源的信号量</li>
+<li>如果信号量的值为正，则进程可以使用该资源，信号量值-1</li>
+<li>如果信号量的值为0，则进程休眠直至信号量值大于0，进程被唤醒</li>
+<li>如果进程释放资源，则信号量值+1；如果有进程正在休眠等待此信号量，则唤醒它们</li>
+</ol>
+<blockquote>
+<p>信号量值操作均应该为<strong>原子操作</strong><br>XSI信号量在此基础上复杂了许多<br><strong>记录锁</strong>和<strong>共享存储中互斥量</strong>均可实现资源的共享</p>
+</blockquote>
+<h2 id="共享存储"><a href="#共享存储" class="headerlink" title="共享存储"></a>共享存储</h2><p>共享存储允许多个进程共享一个给定的存储区。因为数据不需要在客户进程、服务器进程之间复制，所以这是最快的一种IPC。</p>
+<blockquote>
+<p><strong>mmap</strong>也可实现共享存储（将一个文件的若干部分映射至进程地址空间），XSI共享存储段则是内存的匿名段。</p>
+</blockquote>
+<h1 id="网络IPC：套接字"><a href="#网络IPC：套接字" class="headerlink" title="网络IPC：套接字"></a>网络IPC：套接字</h1><p>前面的IPC机制允许同一台计算机上的进程实现通信，而<strong>网络进程间通信（network IPC）</strong>则允许通过网络连接的不同计算机上的进程实现通信。该部分内容较多，将在后续文章中进行统一介绍。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
 <li>《Unix环境高级编程-15章.进程间通信》</li>
 <li><a href="https://www.cnblogs.com/chenny7/p/3682822.html" target="_blank" rel="noopener">IPC 机制简介</a></li>
 </ol>
@@ -371,7 +411,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#管道"><span class="toc-number">2.</span> <span class="toc-text">管道</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述及局限性"><span class="toc-number">2.1.</span> <span class="toc-text">概述及局限性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道的创建"><span class="toc-number">2.2.</span> <span class="toc-text">管道的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道的使用"><span class="toc-number">2.3.</span> <span class="toc-text">管道的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协同进程"><span class="toc-number">3.</span> <span class="toc-text">协同进程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FIFO（命名管道）"><span class="toc-number">4.</span> <span class="toc-text">FIFO（命名管道）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的创建"><span class="toc-number">4.1.</span> <span class="toc-text">FIFO的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的使用"><span class="toc-number">4.2.</span> <span class="toc-text">FIFO的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的用途"><span class="toc-number">4.3.</span> <span class="toc-text">FIFO的用途</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSI-IPC"><span class="toc-number">5.</span> <span class="toc-text">XSI IPC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#相似处"><span class="toc-number">5.1.</span> <span class="toc-text">相似处</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标识符和键"><span class="toc-number">5.1.1.</span> <span class="toc-text">标识符和键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#权限结构"><span class="toc-number">5.1.2.</span> <span class="toc-text">权限结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构限制"><span class="toc-number">5.1.3.</span> <span class="toc-text">结构限制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列"><span class="toc-number">5.2.</span> <span class="toc-text">消息队列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号量"><span class="toc-number">5.3.</span> <span class="toc-text">信号量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#共享存储"><span class="toc-number">5.4.</span> <span class="toc-text">共享存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">5.4.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#管道"><span class="toc-number">2.</span> <span class="toc-text">管道</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述及局限性"><span class="toc-number">2.1.</span> <span class="toc-text">概述及局限性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道的创建"><span class="toc-number">2.2.</span> <span class="toc-text">管道的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管道的使用"><span class="toc-number">2.3.</span> <span class="toc-text">管道的使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#协同进程"><span class="toc-number">3.</span> <span class="toc-text">协同进程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FIFO（命名管道）"><span class="toc-number">4.</span> <span class="toc-text">FIFO（命名管道）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的创建"><span class="toc-number">4.1.</span> <span class="toc-text">FIFO的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的使用"><span class="toc-number">4.2.</span> <span class="toc-text">FIFO的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIFO的用途"><span class="toc-number">4.3.</span> <span class="toc-text">FIFO的用途</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSI-IPC"><span class="toc-number">5.</span> <span class="toc-text">XSI IPC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#相似处"><span class="toc-number">5.1.</span> <span class="toc-text">相似处</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标识符和键"><span class="toc-number">5.1.1.</span> <span class="toc-text">标识符和键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#权限结构"><span class="toc-number">5.1.2.</span> <span class="toc-text">权限结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构限制"><span class="toc-number">5.1.3.</span> <span class="toc-text">结构限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缺点"><span class="toc-number">5.1.4.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列"><span class="toc-number">5.2.</span> <span class="toc-text">消息队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#操作"><span class="toc-number">5.2.1.</span> <span class="toc-text">操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号量"><span class="toc-number">5.3.</span> <span class="toc-text">信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信号量的工作方式"><span class="toc-number">5.3.1.</span> <span class="toc-text">信号量的工作方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#共享存储"><span class="toc-number">5.4.</span> <span class="toc-text">共享存储</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#网络IPC：套接字"><span class="toc-number">6.</span> <span class="toc-text">网络IPC：套接字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">6.0.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
