@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E7%AE%A1%E9%81%93%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92.jpg">
 <meta property="og:image" content="https://wjj954628981.github.io/2020/03/06/%E9%9D%A2%E8%AF%95%E9%A2%98-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/FIFO%E5%AE%A2%E6%88%B7-%E6%9C%8D%E5%8A%A1%E5%99%A8.jpg">
 <meta property="article:published_time" content="2020-03-05T19:19:16.000Z">
-<meta property="article:modified_time" content="2020-03-07T19:04:24.444Z">
+<meta property="article:modified_time" content="2020-03-07T19:07:00.566Z">
 <meta property="article:author" content="Wordsworth">
 <meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="面试">
@@ -339,7 +339,7 @@
 </blockquote>
 <h2 id="共享存储"><a href="#共享存储" class="headerlink" title="共享存储"></a>共享存储</h2><p>共享存储允许多个进程共享一个给定的存储区。因为数据不需要在客户进程、服务器进程之间复制，所以这是最快的一种IPC。</p>
 <blockquote>
-<p><strong>mmap</strong>也可实现共享存储（将一个文件的若干部分映射至进程地址空间），XSI共享存储段则是内存的匿名段。</p>
+<p><strong>mmap</strong>也可实现共享存储（将一个文件的若干部分映射至进程地址空间），XSI共享存储段则是内存的匿名段。<br>需要通过信号量等机制同步对共享存储的访问。</p>
 </blockquote>
 <h1 id="网络IPC：套接字"><a href="#网络IPC：套接字" class="headerlink" title="网络IPC：套接字"></a>网络IPC：套接字</h1><p>前面的IPC机制允许同一台计算机上的进程实现通信，而<strong>网络进程间通信（network IPC）</strong>则允许通过网络连接的不同计算机上的进程实现通信。该部分内容较多，将在后续文章中进行统一介绍。</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
