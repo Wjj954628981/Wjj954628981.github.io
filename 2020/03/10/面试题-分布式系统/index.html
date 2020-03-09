@@ -6,19 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://wjj954628981.github.io">
-  <title>面试题-事务 | Wordsworth&#39;s blog</title>
+  <title>面试题-分布式系统 | Wordsworth&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="事务是面试题中必考问题之一。">
+  <meta name="description" content="本文参考《大规模分布式存储系统-第三章.分布式系统》，对分布式系统相关的基础概念进行一个大致的讲解与总结，结合本人对于分布式的一点点理解，旨在为有意学习分布式系统的同学提供一点点帮助，同时也对自己的知识进行加深理解与巩固。详细的理论和概念还请直接阅读原文。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="面试题-事务">
-<meta property="og:url" content="https://wjj954628981.github.io/2020/02/26/%E9%9D%A2%E8%AF%95%E9%A2%98-%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:title" content="面试题-分布式系统">
+<meta property="og:url" content="https://wjj954628981.github.io/2020/03/10/%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="Wordsworth&#39;s blog">
-<meta property="og:description" content="事务是面试题中必考问题之一。">
+<meta property="og:description" content="本文参考《大规模分布式存储系统-第三章.分布式系统》，对分布式系统相关的基础概念进行一个大致的讲解与总结，结合本人对于分布式的一点点理解，旨在为有意学习分布式系统的同学提供一点点帮助，同时也对自己的知识进行加深理解与巩固。详细的理论和概念还请直接阅读原文。">
 <meta property="og:locale" content="cn">
-<meta property="article:published_time" content="2020-02-25T17:40:06.000Z">
-<meta property="article:modified_time" content="2020-02-29T16:55:52.240Z">
+<meta property="article:published_time" content="2020-03-09T17:53:33.000Z">
+<meta property="article:modified_time" content="2020-03-09T20:15:52.817Z">
 <meta property="article:author" content="Wordsworth">
+<meta property="article:tag" content="算法">
 <meta property="article:tag" content="面试">
+<meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
   
   
@@ -167,14 +169,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-面试题-事务" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-面试题-分布式系统" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      面试题-事务
+      面试题-分布式系统
     </h1>
   
 
@@ -183,7 +185,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-keyboard-o"></i>
               <span class="post-meta-item-text">  字数统计: </span>
-              <span class="post-count">839字</span>
+              <span class="post-count">1.6k字</span>
             </span>
           </span>
           <span class="post-time">
@@ -191,7 +193,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-hourglass-half"></i>
               <span class="post-meta-item-text">  阅读时长: </span>
-              <span class="post-count">2分</span>
+              <span class="post-count">5分</span>
             </span>
           </span>
         </div>
@@ -203,74 +205,85 @@
 	</span>
 
 
-<a href="/2020/02/26/%E9%9D%A2%E8%AF%95%E9%A2%98-%E4%BA%8B%E5%8A%A1/" class="archive-article-date">
-  	<time datetime="2020-02-25T17:40:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-02-26</time>
+<a href="/2020/03/10/%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" class="archive-article-date">
+  	<time datetime="2020-03-09T17:53:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>事务是面试题中必考问题之一。</p>
+        <p>本文参考《大规模分布式存储系统-第三章.分布式系统》，对分布式系统相关的基础概念进行一个大致的讲解与总结，结合本人对于分布式的一点点理解，旨在为有意学习分布式系统的同学提供一点点帮助，同时也对自己的知识进行加深理解与巩固。详细的理论和概念还请直接阅读原文。</p>
 <a id="more"></a>
 
-<h1 id="事务特性"><a href="#事务特性" class="headerlink" title="事务特性"></a>事务特性</h1><p>事务特性分为四个：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持续性（Durability），简称ACID。</p>
-<ul>
-<li>原子性：事务是数据库逻辑工作单元，事务中包含的操作要么都执行成功，要么都执行失败。</li>
-<li>一致性：事务执行的结果必须是从一个一致性状态转换为另一个一致性状态。</li>
-<li>隔离性：一个事务的执行过程中不能影响到其他事务的执行，即一个事务内部操作及使用的数据对其他事务是隔离的，并发执行各个事务互不干扰。</li>
-<li>持续性：一个事务一旦提交，它对数据库数据的改变是永久性的，后续操作不应该对其执行结果有任何影响。</li>
-</ul>
-<h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><p>事务隔离级别分为四种，从低到高依次分为：读未提交（Read Uncommited）、读已提交（Read Commited）、可重复读（Repeatable Read）、串形化（Serializable），可依次解决丢失更新、脏读、不可重复读、幻读等问题。</p>
-<h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><ul>
-<li>Read Uncommited：一个事务在执行过程中，既可以访问其他事务未提交的新插入的数据，又可以访问未提交的修改数据。如果一个事务已经开始写数据，则另外一个事务不允许同时进行写操作，但允许其他事务读此行数据。此隔离级别可防止丢失更新。</li>
-<li>Read Commited：一个事务在执行过程中，既可以访问其他事务成功提交的新插入的数据，又可以访问成功修改的数据。读取数据的事务允许其他事务继续访问该行数据，但是未提交的写事务将会禁止其他事务访问该行。此隔离级别可有效防止脏读。</li>
-<li>Repeatable Read：一个事务在执行过程中，可以访问其他事务成功提交的新插入的数据，但不可以访问成功修改的数据。读取数据的事务将会禁止写事务（但允许读事务），写事务则禁止任何其他事务。此隔离级别可有效防止不可重复读和脏读。</li>
-<li>Serilizable：提供严格的事务隔离。它要求事务序列化执行，事务只能一个接着一个地执行，不能并发执行。此隔离级别可有效防止脏读、不可重复读和幻读。但这个级别可能导致大量的超时现象和锁竞争，在实际应用中很少使用。</li>
-</ul>
-<h3 id="事务引发问题"><a href="#事务引发问题" class="headerlink" title="事务引发问题"></a>事务引发问题</h3><ul>
-<li>丢失更新：两个事务同时更新一行数据，后提交（或撤销）的事务将之前事务提交的数据覆盖了。</li>
-<li>脏读：指一个事务读取到另一个事务未提交的数据。</li>
-<li>不可重复度：指一个事务对同一行数据重复读取两次，但得到的结果不同。</li>
-<li>幻读：指一个事务执行两次查询，但第二次查询的结果包含了第一次查询中未出现的数据。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>隔离级别\事务问题</th>
-<th>脏读</th>
-<th>不可重复度</th>
-<th>幻读</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Read Uncommited</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-</tr>
-<tr>
-<td>Read Commited</td>
-<td>X</td>
-<td>√</td>
-<td>√</td>
-</tr>
-<tr>
-<td>Repeatable Read</td>
-<td>X</td>
-<td>X</td>
-<td>√</td>
-</tr>
-<tr>
-<td>Serilizable</td>
-<td>X</td>
-<td>X</td>
-<td>X</td>
-</tr>
-</tbody></table>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>一个服务器或者服务器上运行的一个进程称之为一个<strong>节点</strong>，节点与节点之间通过网络互相连接。</p>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><p>分布式系统中，由于其规模一般比较大，通过人工的方式来维护整个集群基本上不可能，因此大规模分布式系统的一个<strong>核心问题</strong>在于<strong>自动容错</strong>。那么，如何发现异常，就是自动容错实现的基础。</p>
+<h3 id="异常类型"><a href="#异常类型" class="headerlink" title="异常类型"></a>异常类型</h3><h4 id="服务器宕机"><a href="#服务器宕机" class="headerlink" title="服务器宕机"></a>服务器宕机</h4><p>服务器宕机后，节点的所有服务不可用，分布式系统需要应对两种情况：</p>
+<ol>
+<li>节点永久性失效，分布式系统需要考虑如何对数据重新分配，避免负载不均衡。</li>
+<li>节点暂时不可用，分布式系统需要考虑如何通过读取<strong>持久化介质</strong>中的数据恢复内存信息，从而恢复宕机之前的某个一致状态。</li>
+</ol>
+<h4 id="网络异常"><a href="#网络异常" class="headerlink" title="网络异常"></a>网络异常</h4><p>引发网络异常的原因可能是：消息丢失、消息乱序、网络包数据错误、网络分区（集群所有节点被划分为多个区域）。</p>
 <blockquote>
-<p>MySQL默认隔离级别为Repeatable Read。</p>
+<p>设计容错系统的一个基本原则是：<strong>网络永远是不可靠的</strong>，任何一个消息只有收到对方的回复后才能认为发送成功。</p>
 </blockquote>
+<h4 id="磁盘故障"><a href="#磁盘故障" class="headerlink" title="磁盘故障"></a>磁盘故障</h4><p>磁盘故障是一种发生概率很高的异常，分为：<strong>磁盘损坏</strong>和<strong>磁盘数据错误</strong>。</p>
+<blockquote>
+<p>磁盘数据错误可以通过<strong>检验和（checksum）</strong>来完成检测。</p>
+</blockquote>
+<h3 id="超时"><a href="#超时" class="headerlink" title="超时"></a>超时</h3><p>在单机系统中，每个函数的执行结果是确定的，成功or失败。但是，分布式系统的<strong>RPC</strong>（Remote Procedure Call）调用结果有三种：成功、失败、超时，被称为分布式存储系统的三态。<br>出现超时之后，只能通过不断重试来验证RPC操作是否成功，因此分布式系统的执行操作应该是幂等的（如覆盖写）。</p>
+<h2 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h2><p>为了保证在异常情况下分布式系统的可用性，往往会将数据冗余地存储多份，每一份称之为<strong>副本</strong>。</p>
+<blockquote>
+<p><strong>副本是分布式存储系统容错技术的唯一手段。如何保证副本之间的一致性是整个分布式系统的核心理论。</strong></p>
+</blockquote>
+<h3 id="一致性的分类"><a href="#一致性的分类" class="headerlink" title="一致性的分类"></a>一致性的分类</h3><h4 id="客户端角度"><a href="#客户端角度" class="headerlink" title="客户端角度"></a>客户端角度</h4><ol>
+<li><strong>强一致性</strong></li>
+<li><strong>弱一致性</strong></li>
+<li><strong>最终一致性</strong>，从写入单个节点到全部节点数据一致的过程称之为<strong>不一致窗口</strong></li>
+</ol>
+<h4 id="存储系统角度"><a href="#存储系统角度" class="headerlink" title="存储系统角度"></a>存储系统角度</h4><ol>
+<li>副本一致性</li>
+<li>更新顺序一致性</li>
+</ol>
+<h2 id="衡量标准"><a href="#衡量标准" class="headerlink" title="衡量标准"></a>衡量标准</h2><ul>
+<li><strong>性能</strong>。常见的性能指标有：吞吐能力（QPS、TPS）和响应时间</li>
+<li><strong>可用性</strong>。指的是系统在面对各种异常时可提供正常服务的能力，可以简单的按照系统服务不可用与正常服务的时间比例来衡量。</li>
+<li><strong>一致性</strong>。越是强的一致性模型，用户使用起来越简单。</li>
+<li><strong>可扩展性</strong>。指的是分布式存储系统通过扩展集群服务器规模来提高系统存储容量、计算量和性能的能力。</li>
+</ul>
+<h2 id="一致性理论"><a href="#一致性理论" class="headerlink" title="一致性理论"></a>一致性理论</h2><h3 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h3><p>一个分布式系统不可能同时满足：<strong>一致性</strong>（Consistency）、<strong>可用性</strong>（Availability）、<strong>分区容错性</strong>（Partition tolerance），最多只能同时满足其中两项。</p>
+<ul>
+<li>一致性：多个副本数据之间能够保持一致的特性</li>
+<li>可用性：指系统提供的服务必须一直处于可用的状态，每次请求都能获取到非错的响应</li>
+<li>分区容错性：分布式系统在遇到任何网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务，除非整个网络环境都发生了故障。</li>
+</ul>
+<p>另一版本的解释（在参考三中进行解释，个人认为对于CAP描述更加清晰且明确）：</p>
+<ul>
+<li>C：一致性被称为原子对象，任何的读写都应该看起来是“原子“的，或串行的。写后面的读一定能读到前面写的内容，所有的读写请求都好像被全局排序。</li>
+<li>A：对任何非失败节点都应该在有限时间内给出请求的回应（请求的可终止性）。</li>
+<li>P：允许节点之间丢失任意多的消息，当网络分区发生时，节点之间的消息可能会完全丢失。</li>
+</ul>
+<blockquote>
+<p>因为无法保证网络硬件一定不出现问题，因此分区容错性一定需要满足，CAP理论需要在C和A上做取舍。</p>
+</blockquote>
+<h3 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h3><p>BASE是Basically Available（基本可用），Soft state（软状态），和Eventually consistent（最终一致性）三个短语的缩写。</p>
+<ul>
+<li>基本可用。允许出现响应时间损失或者功能损失。</li>
+<li>软状态。允许系统中的数据存在中间状态，并认为该状态不影响系统的整体可用性，即允许系统在多个不同节点的数据副本存在数据延时。</li>
+<li>最终一致性。系统能够保证在没有其他新的更新操作的情况下，数据最终一定能够达到一致的状态，因此所有客户端对系统的数据访问最终都能够获取到最新的值。</li>
+</ul>
+<hr>
+<h1 id="数据分布"><a href="#数据分布" class="headerlink" title="数据分布"></a>数据分布</h1><p>分布式系统区别于传统单机系统在于能够将数据分布到多个节点，并在多个节点实现自动负载均衡。</p>
+<h2 id="哈希分布"><a href="#哈希分布" class="headerlink" title="哈希分布"></a>哈希分布</h2><h2 id="顺序分布"><a href="#顺序分布" class="headerlink" title="顺序分布"></a>顺序分布</h2><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><hr>
+<h1 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h1><hr>
+<h1 id="容错"><a href="#容错" class="headerlink" title="容错"></a>容错</h1><hr>
+<h1 id="可扩展性"><a href="#可扩展性" class="headerlink" title="可扩展性"></a>可扩展性</h1><hr>
+<h1 id="分布式协议"><a href="#分布式协议" class="headerlink" title="分布式协议"></a>分布式协议</h1><hr>
+<h1 id="跨机房部署"><a href="#跨机房部署" class="headerlink" title="跨机房部署"></a>跨机房部署</h1><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>《大规模分布式存储系统-第三章.分布式系统》</li>
+<li><a href="https://www.jianshu.com/p/40dbe406d2f4" target="_blank" rel="noopener">分布式一致性算法</a></li>
+<li><a href="https://blog.csdn.net/chen77716/article/details/30635543" target="_blank" rel="noopener">CAP理论</a></li>
+</ul>
 
       
 
@@ -284,7 +297,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">面试</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">分布式</a>
         		</li>
       		
 		</ul>
@@ -303,18 +324,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/02/28/%E4%BC%99%E4%BC%B4%E7%B3%BB%E7%BB%9F%E5%92%8Cslab%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          伙伴系统和slab内存分配机制
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/02/25/Linux%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Linux内存管理-从操作系统角度看可执行文件的装载</div>
+    <a href="/2020/03/09/%E9%9D%A2%E8%AF%95%E9%A2%98-%E5%BB%B6%E8%BF%9F%E4%BB%BB%E5%8A%A1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">面试题-延时任务</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -341,7 +353,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#事务特性"><span class="toc-number">1.</span> <span class="toc-text">事务特性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事务隔离级别"><span class="toc-number">2.</span> <span class="toc-text">事务隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#隔离级别"><span class="toc-number">2.0.1.</span> <span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事务引发问题"><span class="toc-number">2.0.2.</span> <span class="toc-text">事务引发问题</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#异常"><span class="toc-number">1.1.</span> <span class="toc-text">异常</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#异常类型"><span class="toc-number">1.1.1.</span> <span class="toc-text">异常类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#服务器宕机"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">服务器宕机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络异常"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">网络异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#磁盘故障"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">磁盘故障</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#超时"><span class="toc-number">1.1.2.</span> <span class="toc-text">超时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一致性"><span class="toc-number">1.2.</span> <span class="toc-text">一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一致性的分类"><span class="toc-number">1.2.1.</span> <span class="toc-text">一致性的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端角度"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">客户端角度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储系统角度"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">存储系统角度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#衡量标准"><span class="toc-number">1.3.</span> <span class="toc-text">衡量标准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一致性理论"><span class="toc-number">1.4.</span> <span class="toc-text">一致性理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CAP理论"><span class="toc-number">1.4.1.</span> <span class="toc-text">CAP理论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BASE理论"><span class="toc-number">1.4.2.</span> <span class="toc-text">BASE理论</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据分布"><span class="toc-number">2.</span> <span class="toc-text">数据分布</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希分布"><span class="toc-number">2.1.</span> <span class="toc-text">哈希分布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺序分布"><span class="toc-number">2.2.</span> <span class="toc-text">顺序分布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">2.3.</span> <span class="toc-text">负载均衡</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#复制"><span class="toc-number">3.</span> <span class="toc-text">复制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#容错"><span class="toc-number">4.</span> <span class="toc-text">容错</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#可扩展性"><span class="toc-number">5.</span> <span class="toc-text">可扩展性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分布式协议"><span class="toc-number">6.</span> <span class="toc-text">分布式协议</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#跨机房部署"><span class="toc-number">7.</span> <span class="toc-text">跨机房部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">7.0.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
